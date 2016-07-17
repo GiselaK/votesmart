@@ -18,7 +18,7 @@ parseLegislators = function (body) {
 			birthday: legislator.birthday
 		};
 	}
-	
+
 	var legislators = JSON.parse(body).response.legislator;
 	var multipleLegislators = Array.isArray(legislators);
 
@@ -34,10 +34,15 @@ exports.getStateLegistators = function (stateID, send) {
 	var legislators = [];
 	request("http://www.opensecrets.org/api/?method=getLegislators&id=" + state + "&apikey=" + apiKey + "&output=json", function (err, resp, body) {
 		if (err) {
-			console.log(err)
+			console.log("Open Secrets API Error:", err)
 		}
 		else {
-			send(parseLegislators(body));
+			if (typeof body === "string") {
+				console.log("Open Secrets API Error:", body)
+				send();
+			} else {
+				send(parseLegislators(body));
+			}
 		}
 
 	});

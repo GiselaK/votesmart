@@ -15,7 +15,11 @@ router.get('/politician/:pid', function(req, res, next) {
 
 router.get('/:sid/politicians', function(req, res, next) {
     openSecrets.getStateLegistators(req.params.sid, function (data) {
-        res.json(data)
+    	if (data) {
+	        res.json(data)
+    	} else {
+    		res.status(404).send("Error: Cannot find the state requested")
+    	}
     });
 });
 module.exports = router;
