@@ -29,20 +29,16 @@ parseLegislators = function (body) {
 }
 
 exports.getStateLegistators = function (stateID, send) {
+	
 	var stateID = stateID || 0;
 	var state = states[stateID].abbreviation;
 	var legislators = [];
-	request("http://www.opensecrets.org/api/?method=getLegislators&id=" + state + "&apikey=" + apiKey + "&output=json", function (err, resp, body) {
-		if (err) {
-			console.log("Open Secrets API Error:", err)
-		}
-		else {
-			try {
-				send(parseLegislators(body));
-			} catch (e) {
-				send();
-			}
-		}
 
+	request("http://www.opensecrets.org/api/?method=getLegislators&id=" + state + "&apikey=" + apiKey + "&output=json", function (err, resp, body) {
+		try {
+			send(parseLegislators(body));
+		} catch (e) {
+			send("Error", "Error: " + e.message);
+		}
 	});
 }
