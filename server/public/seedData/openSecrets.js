@@ -37,11 +37,10 @@ exports.getStateLegistators = function (stateID, send) {
 			console.log("Open Secrets API Error:", err)
 		}
 		else {
-			if (typeof body === "string") {
-				console.log("Open Secrets API Error:", body)
-				send();
-			} else {
+			try {
 				send(parseLegislators(body));
+			} catch (e) {
+				send();
 			}
 		}
 
