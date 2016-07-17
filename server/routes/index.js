@@ -9,16 +9,21 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/politician/:pid', function(req, res, next) {
-    // req.params.pid
-  res.json()
+	openSecrets.getLegislatorProfile(req.params.pid, function (data, err) {
+		if(!err) {
+			res.json(data);
+		} else {
+			res.status(404).send(err);
+		}
+	})
 });
 
 router.get('/:sid/politicians', function(req, res, next) {
     openSecrets.getStateLegistators(req.params.sid, function (data, err) {
     	if (!err) {
-	        res.json(data)
+	        res.json(data);
     	} else {
-    		res.status(404).send(err)
+    		res.status(404).send(err);
     	}
     });
 });

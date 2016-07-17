@@ -3,19 +3,20 @@ var states = require('./statesList');
 var apiKey = require('../../apikeys').openSecrets;
 
 
-parseLegislators = function (body) {
+parseStateLegislators = function (body) {
 	parseLegislator = function (legislator) {
 		legislator = legislator['@attributes'];
 		return {
 			openSecretsID: legislator.cid, 
 			name: legislator.firstlast, 
-			gender: legislator.gender, 
+			// gender: legislator.gender, 
 			party: legislator.party, 
-			website: legislator.website,
-			twitter: legislator.twitter_id,
-			youtube: legislator.youtube_url,
-			form: legislator.webform,
-			birthday: legislator.birthday
+			// website: legislator.website,
+			// twitter: legislator.twitter_id,
+			// youtube: legislator.youtube_url,
+			// form: legislator.webform,
+			// birthday: legislator.birthday,
+			image: "https://twitter.com/" + legislator.twitter_id + "/profile_image?size=bigger"
 		};
 	}
 
@@ -28,6 +29,13 @@ parseLegislators = function (body) {
 
 }
 
+parseLegislatorIndustryFunding = function (body) {
+	return JSON.parse(body).response.industries.industry.map(function (industry) {
+		return industry['@attributes'];
+	})
+
+}
+
 exports.getStateLegistators = function (stateID, send) {
 
 	var stateID = stateID || 0;
@@ -36,7 +44,7 @@ exports.getStateLegistators = function (stateID, send) {
 
 	request("http://www.opensecrets.org/api/?method=getLegislators&id=" + state + "&apikey=" + apiKey + "&output=json", function (err, resp, body) {
 		try {
-			send(parseLegislators(body));
+			send(parseStateLegislators(body));
 		} catch (e) {
 			var knownErrorCauses = ["The state was not found in the Open Secrets API"]
 			var errorMessage = "Error: " + e.message + "\n Known causes for this error include: ";
@@ -45,5 +53,13 @@ exports.getStateLegistators = function (stateID, send) {
 			})
 			send("Error", errorMessage); 
 		}
+	});
+}
+
+exports.getLegislatorProfile = function (openSecretsID, send) {
+	openSecretsID = openSecretsID || "N00007360";
+	var year = year || 2016;
+	request("http://www.opensecrets.org/api/?method=candIndustry&cid=" + openSecretsID + "&cycle=" + year + "&apikey=" + apiKey + "&output=json", function (err, resp, body) {
+		send(parseLegislatorIndustryFunding(body));
 	});
 }
