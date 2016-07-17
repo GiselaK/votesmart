@@ -6,7 +6,6 @@ exports.getStateLegistators = function (stateID, send) {
 	var stateID = stateID || 0;
 	var state = states[stateID].abbreviation;
 	var legislators = [];
-	console.log(state)
 	request("http://www.opensecrets.org/api/?method=getLegislators&id=" + state + "&apikey=" + apiKey + "&output=json", function (err, resp, body) {
 		if (err) {
 			console.log(err)
