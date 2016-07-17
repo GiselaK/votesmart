@@ -29,7 +29,7 @@ parseLegislators = function (body) {
 }
 
 exports.getStateLegistators = function (stateID, send) {
-	
+
 	var stateID = stateID || 0;
 	var state = states[stateID].abbreviation;
 	var legislators = [];
@@ -38,7 +38,12 @@ exports.getStateLegistators = function (stateID, send) {
 		try {
 			send(parseLegislators(body));
 		} catch (e) {
-			send("Error", "Error: " + e.message);
+			var knownErrorCauses = ["The state was not found in the Open Secrets API"]
+			var errorMessage = "Error: " + e.message + "\n Known causes for this error include: ";
+			knownErrorCauses.forEach(function (val) {
+				errorMessage+= "\n - " + val
+			})
+			send("Error", errorMessage); 
 		}
 	});
 }
