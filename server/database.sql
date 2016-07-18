@@ -1,4 +1,5 @@
-CREATE TABLE Legislators (
+
+CREATE TABLE IF NOT EXISTS Legislators (
 	ID INTEGER PRIMARY KEY,
 	openSecretsID varchar(255),
 	sunlightid varchar(255),
