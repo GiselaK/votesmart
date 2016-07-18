@@ -9,6 +9,8 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var db = require('./database');
+var sunlightlabs = require('./public/seedData/sunlightlabs'); // TEMPORARY!
+
 var app = express();
 
 // view engine setup
@@ -58,5 +60,6 @@ app.use(function(err, req, res, next) {
 });
 
 db.createDatabase();
+sunlightlabs.seedBills();
 
 module.exports = app;
