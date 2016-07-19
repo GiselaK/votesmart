@@ -1,6 +1,6 @@
 
 CREATE TABLE IF NOT EXISTS Legislators (
-	ID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	ID SERIAL NOT NULL PRIMARY KEY,
 	openSecretsID varchar(255),
 	sunlightid varchar(255),
 	birthday varchar(255),
@@ -13,10 +13,10 @@ CREATE TABLE IF NOT EXISTS Legislators (
 	webform varchar(255),
 	website varchar(255),
 	youtube varchar(255)
-)
+);
 
 CREATE TABLE IF NOT EXISTS Bills (
-	ID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	ID SERIAL NOT NULL PRIMARY KEY,
 	sunlightid varchar(255),
 	created_at varchar(255),
 	updated_at varchar(255),
@@ -24,5 +24,5 @@ CREATE TABLE IF NOT EXISTS Bills (
 	state varchar(255),
 	session varchar(255),
 	bill_id varchar(255)
-)
+);
 

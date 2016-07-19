@@ -1,5 +1,8 @@
 var pg = require("./postgresInteractions");
 var async = require('async');
+var pg = require('pg');
+var connectionString = process.env.DATABASE_URL || 'postgresql://localhost/votesmart';
+var client = new pg.Client(connectionString);
 
 exports.addBills = function (bills) {
 	var query = "INSERT INTO Bills (title, sunlightid, created_at, updated_at, chamber, state, session, bill_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) "
@@ -12,17 +15,24 @@ exports.addBills = function (bills) {
 			 bill.state.toUpperCase(), 
 			 bill.session, bill.bill_id]; 
 
-		pg.query(query,value,callback);
+		client.connect(function (err) {
+			client.query(query, value, function (err) {
+				callback(err)
+			});
+
+		})
+		// pg.query(query,value,callback);
 	}
 
 	async.each(bills, saveBillIntoDB, function(err) {
-	  done();
-	  if (err) {
-	    set_response(500, err, res);
-	    logger.error('error running query', err);
-	    return console.error('error running query', err);
-	  }
-	  logger.info('subscription with created');
-	  set_response(201);
+	  // done();
+	  console.log("err", err)
+	  // if (err) {
+	  //   set_response(500, err, res);
+	  //   // logger.error('error running query', err);
+	  //   return console.error('error running query', err);
+	  // }
+	  // logger.info('subscription with created');
+	  // set_response(201);
 	})
 }
