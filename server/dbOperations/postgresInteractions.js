@@ -1,13 +1,13 @@
 var pg = require('pg');
 var connectionString = process.env.DATABASE_URL || 'postgresql://localhost/votesmart';
-var client = new pg.Client(connectionString);
 
 exports.query = function (newQuery, values, cb) {
+	var client = new pg.Client(connectionString);
 	client.connect(function (err) {
 		client.query(newQuery, values, function (err) {
-			cb(err)
+			console.log(err)
+			client.end();
 		});
 
 	})
-	// client.end();
 }

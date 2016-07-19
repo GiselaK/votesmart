@@ -11,20 +11,9 @@ exports.seedBills = function (send) {
     var getStateBills = function (state, page) {
       page = page || 1;
       request("http://openstates.org/api/v1/bills/?state=" + state + "&apikey=" + apiKey + "&sort=created_at&page=" + page, function (err, resp, body) {
-
-        console.log("body:", body)
         if (body) {
-          // if (typeof JSON.parse(data[data.length-1])[0] === "object") {
             bills.addBills(JSON.parse(body))
-            // try {
-            //   var blah = JSON.parse(data[data.length-1])[0].title
-              
-            // } catch (e) {
-              // console.log(JSON.parse(data[data.length-1])[0]);
-            // }
-            
-          // } 
-          // getStateBills(state, page + 1)
+            getStateBills(state, page + 1)
         }
 
       })
