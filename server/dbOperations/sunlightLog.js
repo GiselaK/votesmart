@@ -1,7 +1,8 @@
 var pg = require("./postgresInteractions");
+var Promise = require('bluebird');
 
 exports.addDateToLog = function (bills) {
-	var query = "INSERT INTO SunlightLog (date) VALUES ($1)"
+	var query = "INSERT INTO SunlightLog (dated) VALUES ($1)"
 
 	var getDate = function () {
       var today = new Date();
@@ -13,7 +14,15 @@ exports.addDateToLog = function (bills) {
     }
 
 	var value = [getDate()];
-
 	pg.query(query, value);
 
+}
+
+exports.retrieveLastLogDate = function (cb) {
+	var query = "SELECT MAX(dated) FROM sunlightlog;";
+
+	pg.query(query, null, function (date, baj) {
+		cb(date.rows[0].max);
+		// Is there a way I could do this without rows
+	})
 }
