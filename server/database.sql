@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS Legislators (
 
 CREATE TABLE IF NOT EXISTS Bills (
 	ID SERIAL NOT NULL PRIMARY KEY,
-	title varchar(255),
+	title varchar(1000),
 	sunlightid varchar(255),
 	created_at varchar(255),
 	updated_at varchar(255),
