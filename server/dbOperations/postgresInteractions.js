@@ -4,10 +4,16 @@ var connectionString = process.env.DATABASE_URL || 'postgresql://localhost/votes
 exports.query = function (newQuery, values, cb) {
 	var client = new pg.Client(connectionString);
 	client.connect(function (err) {
-		client.query(newQuery, values, function (err) {
-			console.log(err)
-			client.end();
-		});
+		if (values) {
+			client.query(newQuery, values, function (err) {
+				client.end();
+			});
 
+		} else {
+			client.query(newQuery, function (err, body) {
+				cb(body);
+				client.end();
+			});
+		}
 	})
 }
