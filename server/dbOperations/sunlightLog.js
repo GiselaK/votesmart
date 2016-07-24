@@ -1,6 +1,6 @@
 var pg = require("./postgresInteractions");
 
-exports.addDateToLog = function (bills) {
+exports.addDateToLog = function () {
 	var query = "INSERT INTO SunlightLog (dated) VALUES ($1)"
 
 	var getDate = function () {
