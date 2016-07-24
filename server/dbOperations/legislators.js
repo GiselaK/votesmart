@@ -12,3 +12,11 @@ exports.addLegislators = function (legislators) {
 		pg.query(query, values)
 	})
 }
+
+exports.getLegislator = function (id, cb) {
+	var query = "SELECT party FROM Legislators WHERE id = '" + id + "'";
+
+	pg.query(query, null, function (err, body) {
+		cb(err, body);
+	})
+}
