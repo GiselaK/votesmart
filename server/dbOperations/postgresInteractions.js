@@ -11,7 +11,7 @@ exports.query = function (newQuery, values, cb) {
 
 		} else {
 			client.query(newQuery, function (err, body) {
-				cb(body);
+				cb(err, body);
 				client.end();
 			});
 		}
