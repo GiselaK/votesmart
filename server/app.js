@@ -9,7 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var db = require('./database');
-var sunlightlabs = require('./public/seedData/sunlightlabs'); // TEMPORARY!
+var seedDB = require('./public/seedData/seedDB');
 
 var app = express();
 
@@ -60,6 +60,5 @@ app.use(function(err, req, res, next) {
 });
 
 db.createDatabase();
-sunlightlabs.seedBills();
-
+seedDB.seed();
 module.exports = app;
