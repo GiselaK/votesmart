@@ -24,7 +24,11 @@ exports.retrieveLastLogDate = function (cb) {
 		if (err) {
 			console.log(err)
 		}
-		cb(date.rows[0].max);
+		try {
+			cb(date.rows[0].max);
+		} catch (e) {
+
+		}
 		// Is there a way I could do this without rows
 	})
 }
