@@ -31,3 +31,10 @@ CREATE TABLE IF NOT EXISTS SunlightLog (
 	ID SERIAL NOT NULL PRIMARY KEY,
 	dated varchar(255)
 );
+
+CREATE TABLE IF NOT EXISTS Votes (
+	ID SERIAL NOT NULL PRIMARY KEY,
+	legID SERIAL references Legislators(ID),
+	billID SERIAL references Bills(ID),
+	vote boolean
+)
