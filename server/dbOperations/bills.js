@@ -16,3 +16,15 @@ exports.addBills = function (bills) {
 
 	bills.forEach(function (bill){saveBillIntoDB(bill)})
 }
+
+exports.addBillDetails = function (bill) {
+	var addVotes = function () {
+		var query = "INSERT INTO Votes (legID, billID, vote) VALUES ($1, $2, $3)"
+
+		var addVoteIntoDB = function (vote) {
+			var value = [vote.leg_id, , "yes"]
+		}
+		bill.votes[0].yes_votes.forEach(function (vote) {addVoteIntoDB(vote)})
+	}
+	addVotes();
+}
