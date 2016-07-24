@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var openSecrets = require('../public/seedData/openSecrets')
+var finances = require('../public/seedData/finances')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/politician/:pid', function(req, res, next) {
-	openSecrets.getLegislatorProfile(req.params.pid, function (data, err) {
+	finances.getLegislatorProfile(req.params.pid, function (data, err) {
 		if(!err) {
 			res.json(data);
 		} else {
@@ -19,7 +19,7 @@ router.get('/politician/:pid', function(req, res, next) {
 });
 
 router.get('/:sid/politicians', function(req, res, next) {
-    openSecrets.getStateLegistators(req.params.sid, function (data, err) {
+    finances.getStateLegistators(req.params.sid, function (data, err) {
     	if (!err) {
 	        res.json(data);
     	} else {
