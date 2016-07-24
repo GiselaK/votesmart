@@ -6,12 +6,17 @@ exports.query = function (newQuery, values, cb) {
 	client.connect(function (err) {
 		if (values) {
 			client.query(newQuery, values, function (err) {
+				if (cb) {
+					cb(err, body);
+				}
 				client.end();
 			});
 
 		} else {
 			client.query(newQuery, function (err, body) {
-				cb(err, body);
+				if (cb) {
+					cb(err, body);
+				}
 				client.end();
 			});
 		}
