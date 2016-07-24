@@ -25,7 +25,10 @@ exports.addBillDetails = function (bill) {
 		var addVoteIntoDB = function (vote) {
 			pg.query(query);
 		}
-		bill.votes[0].yes_votes.forEach(function (vote) {addVoteIntoDB(vote)})
+
+		if (bill.votes[0]){
+			bill.votes[0].yes_votes.forEach(function (vote) {addVoteIntoDB(vote)})
+		}
 	}
 	addVotes();
 }
