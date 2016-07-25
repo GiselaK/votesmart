@@ -59,6 +59,5 @@ app.use(function(err, req, res, next) {
   });
 });
 
-db.createDatabase();
-seedDB.seed();
+db.createDatabase(seedDB.seed);
 module.exports = app;

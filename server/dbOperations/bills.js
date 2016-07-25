@@ -19,9 +19,7 @@ exports.addBills = function (bills) {
 
 exports.addBillDetails = function (bill) {
 	var addVotes = function () {
-		var query = "INSERT INTO Votes (legID, billID, vote) VALUES (1, (SELECT id from bills WHERE bill_id = '" + bill.bill_id + "'), TRUE)";
-		// 1 IS TEMPORARY FOR TESTING!!!
-		// TODO: Add legislators to db and get their id here
+		var query = "INSERT INTO Votes (legID, billID, vote) VALUES ((SELECT id from Legislators WHERE sunlightid = '" + bill.leg_id + "') , (SELECT id from bills WHERE bill_id = '" + bill.bill_id + "'), TRUE)";
 		var addVoteIntoDB = function (vote) {
 			pg.query(query);
 		}

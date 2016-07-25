@@ -1,17 +1,15 @@
 var express = require('express');
 var router = express.Router();
-var finances = require('../public/seedData/finances')
+var legislatorsQueries = require('../dbOperations/legislators')
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  // res.render('index', { title: 'Express' });
   res.json();
 });
 
 router.get('/politician/:pid', function(req, res, next) {
-	finances.getLegislatorProfile(req.params.pid, function (data, err) {
-		if(!err) {
-			res.json(data);
+	legislatorsQueries.getLegislator(req.params.pid, function (err, body) {
+		if (!err) {
+			res.json(body)
 		} else {
 			res.status(404).send(err);
 		}
