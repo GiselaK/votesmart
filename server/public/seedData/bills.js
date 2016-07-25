@@ -32,7 +32,7 @@ var getStateBills = function (state, lastUpdateDate, page) {
     apiReq+="&updated_since=" + lastUpdateDate;
   } else {
     if (!warned) {
-      console.log("WARNING: If the database is seeded this code should not be ran (This is regarding a problem with the SunLightLog table). \n If this is the first time seeding the database, it should reach here but this process will take hours. Please close the server to cancel the seeding process");
+      console.log("WARNING: \n If the database is seeded this code should not be ran (This is regarding a problem with the SunLightLog table). \n If this is the first time seeding the database, it should reach here but this process will take hours. Please close the server to cancel the seeding process");
       warned = true;
     }
   }
