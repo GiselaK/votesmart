@@ -4,7 +4,7 @@ var pg = require('pg');
 
 var db = fs.readFileSync('database.sql').toString();
 
-exports.createDatabase = function () {
+exports.createDatabase = function (seedDB) {
   var connectionString = process.env.DATABASE_URL || 'postgresql://localhost/votesmart';
   var client = new pg.Client(connectionString);
   client.connect(function (err) {
@@ -13,7 +13,7 @@ exports.createDatabase = function () {
     // execute a query on our database
     client.query(db, function (err, result) {
       if (err) throw err;
-
+      seedDB();
       // just print the result to the console
       // console.log(result); // outputs: { name: 'brianc' }
 
@@ -22,7 +22,6 @@ exports.createDatabase = function () {
       client.end(function (err) {
         if (err) throw err;
       });
-    });
-  });
-
+    });    
+  })
 }
