@@ -7,6 +7,7 @@ var Promise = require("bluebird");
 
 var baseURL = "http://openstates.org/api/v1/bills/";
 var page = 1;
+var warned;
 
 var getBillsDetails = function (bills) {
   var getBillDetails = function (state, session, bill_id) {
@@ -30,7 +31,10 @@ var getStateBills = function (state, lastUpdateDate, page) {
   if (lastUpdateDate) {
     apiReq+="&updated_since=" + lastUpdateDate;
   } else {
-    console.log("ERROR: Sunlight Labs API getStateBills. If the db is seeded this code should not be ran (This is regarding a problem with the SunLightLog table) If this is the first time seeding the database, it should reach here but this process will take hours. Please close the server to avoid this insanely long seeding process")
+    if (!warned) {
+      console.log("ERROR: Sunlight Labs API getStateBills. If the db is seeded this code should not be ran (This is regarding a problem with the SunLightLog table) If this is the first time seeding the database, it should reach here but this process will take hours. Please close the server to avoid this insanely long seeding process");
+      warned = true;
+    }
   }
 
   request(apiReq, function (err, resp, body) {
@@ -42,7 +46,7 @@ var getStateBills = function (state, lastUpdateDate, page) {
   })
 };
 
- var getAllStatesBills = function (lastUpdateDate) {
+var getAllStatesBills = function (lastUpdateDate) {
   statesList.forEach(function (state) {
     getStateBills(state.abbreviation, lastUpdateDate)
   })
