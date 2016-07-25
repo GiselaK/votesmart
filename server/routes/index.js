@@ -1,17 +1,15 @@
 var express = require('express');
 var router = express.Router();
-var openSecrets = require('../public/seedData/openSecrets')
+var legislatorsQueries = require('../dbOperations/legislators')
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  // res.render('index', { title: 'Express' });
   res.json();
 });
 
 router.get('/politician/:pid', function(req, res, next) {
-	openSecrets.getLegislatorProfile(req.params.pid, function (data, err) {
-		if(!err) {
-			res.json(data);
+	legislatorsQueries.getLegislator(req.params.pid, function (err, body) {
+		if (!err) {
+			res.json(body)
 		} else {
 			res.status(404).send(err);
 		}
@@ -19,7 +17,7 @@ router.get('/politician/:pid', function(req, res, next) {
 });
 
 router.get('/:sid/politicians', function(req, res, next) {
-    openSecrets.getStateLegistators(req.params.sid, function (data, err) {
+    finances.getStateLegistators(req.params.sid, function (data, err) {
     	if (!err) {
 	        res.json(data);
     	} else {

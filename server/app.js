@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var db = require('./database');
+var seedDB = require('./public/seedData/seedDB');
+
 var app = express();
 
 // view engine setup
@@ -56,5 +59,5 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
+db.createDatabase(seedDB.seed);
 module.exports = app;
