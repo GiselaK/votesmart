@@ -5,7 +5,7 @@ exports.query = function (newQuery, values, cb) {
 	var client = new pg.Client(connectionString);
 	client.connect(function (err) {
 		if (values) {
-			client.query(newQuery, values, function (err) {
+			client.query(newQuery, values, function (err, body) {
 				if (cb) {
 					cb(err, body);
 				}

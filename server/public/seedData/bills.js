@@ -47,6 +47,7 @@ var getStateBills = function (state, lastUpdateDate, page) {
 };
 
 var getAllStatesBills = function (lastUpdateDate) {
+  console.log("Seeding Bills...")
   statesList.forEach(function (state) {
     getStateBills(state.abbreviation, lastUpdateDate)
   })
