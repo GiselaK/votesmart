@@ -6,15 +6,33 @@ var apiKey = require('../../apikeys').sunlightlabs;
 var legislators = require('../../dbOperations/legislators')
 
 var baseURL = "http://openstates.org/api/v1/legislators/?"
+
 module.exports = function (cb) {
-	console.log("Seeding legislators...")
 	var seedStateLegs = function (state, stateIndex) {
-		var apiReq = baseURL + "state=" + state.abbreviation + "&apikey="+ "61a5c87624ce4cc49d08e6e7918510f0";
-		request(apiReq, function (err, resp, body)  {
-			legislators.addLegislators(JSON.parse(body));
-		})
+	console.log("Requesting legislators...")
+		var apiReq = baseURL + "state=" + state.abbreviation + "&apikey="+ apiKey;
+		return new Promise(function (resolve) {
+			return request(apiReq, function (err, resp, body) {
+				console.log("Retreiving legislators...", body)
+				// console.log(body)
+				return resolve(apiReq);
+			})
+		});
+		
 	}
-	Promise.each(statesList, function (state, index){ return seedStateLegs(state, index)}).then(function() {
+	// statesList.forEach(function (state, index){ return seedStateLegs(state.abbreviation, index)});
+
+	Promise.all(statesList.map(seedStateLegs)).then(function (body) {
+		return new Promise (function (resolve) {
+			console.log("in da promise",typeof body)
+			legislators.addLegislators(body, function (err, body) {
+				console.log(err)
+				resolve();
+			});		
+		})
+	})
+	.then(function (){
+		console.log("Done with legislators. On to Bills")
 		cb();
-	});
+	})
 }

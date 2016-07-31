@@ -1,27 +1,38 @@
 var pg = require("./postgresInteractions");
 
-exports.addBills = function (bills) {
-	var query = "INSERT INTO Bills (title, sunlightid, created_at, updated_at, chamber, state, session, bill_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) "
+exports.addBills = function (bills, cb) {
 	// TODO: Find a less tedious way of bulk inserts to db
 
 	var saveBillIntoDB = function(bill){ 
-		var value = [bill.title,
-			 bill.id, bill.created_at,
-			 bill.updated_at, bill.chamber,
-			 bill.state.toUpperCase(), 
-			 bill.session, bill.bill_id]; 
+		// console.log("inserting bills")
+		var value = [{fieldName: "title", value: bill.title},
+			 {fieldName: "sunlightid", value: bill.id},
+			 {fieldName: "created_at", value: bill.created_at},
+			 {fieldName: "updated_at", value: bill.updated_at},
+			 {fieldName: "chamber", value: bill.chamber},
+			 {fieldName: "state", value: bill.state.toUpperCase()},
+			 {fieldName: "session", value: bill.session},
+			 {fieldName: "bill_id", value: bill.bill_id}];
 
-		pg.query(query, value);
+		pg.insertQuery("Bills", value, function (err, body) {
+			cb(err, body)
+		});
 	}
 
 	bills.forEach(function (bill){saveBillIntoDB(bill)})
 }
 
-exports.addBillDetails = function (bill) {
+exports.addBillDetails = function (bill, cb) {
 	var addVotes = function () {
-		var query = "INSERT INTO Votes (legID, billID, vote) VALUES ((SELECT id from Legislators WHERE sunlightid = '" + bill.leg_id + "') , (SELECT id from bills WHERE bill_id = '" + bill.bill_id + "'), TRUE)";
 		var addVoteIntoDB = function (vote) {
-			pg.query(query);
+			console.log("inserting votes")
+			var query = "INSERT INTO Votes (legID, billID, vote) VALUES ((SELECT id from Legislators WHERE sunlightid = '" + vote.leg_id + "') , (SELECT id from bills WHERE bill_id = '" + bill.bill_id + "'), TRUE)";
+			// console.log("l egid:", vote.leg_id, "billid:", bill.bill_id)
+			pg.query(query, null, function (err, body){
+				console.log("idek", query)
+				console.log("WTF", err)
+				cb(err, body)
+			});
 		}
 
 		if (bill.votes[0]){

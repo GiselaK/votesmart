@@ -1,7 +1,6 @@
 var pg = require("./postgresInteractions");
 
 exports.addDateToLog = function () {
-	var query = "INSERT INTO SunlightLog (dated) VALUES ($1)"
 
 	var getDate = function () {
       var today = new Date();
@@ -12,8 +11,11 @@ exports.addDateToLog = function () {
       return date;
     }
 
-	var value = [getDate()];
-	pg.query(query, value);
+	pg.insertQuery("SunlightLog", [{fieldName: "dated", value: getDate()}], function (err, body){
+		if (err) {
+			throw err;
+		}
+	});
 
 }
 

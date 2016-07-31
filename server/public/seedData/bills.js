@@ -11,10 +11,22 @@ var warned;
 
 var getBillsDetails = function (bills) {
   var getBillDetails = function (state, session, bill_id) {
-    var apiReq = baseURL + "/" + state + "/" + session + "/" + bill_id + "?apikey=" + apiKey;
+    var apiReq = baseURL + state + "/" + session + "/" + bill_id + "?apikey=" + apiKey;
+    // console.log("Requesting Bill Votes...")
     request(apiReq, function (err, resp, body) {
+      // console.log("Err:", apiReq, "DF", body, "HALLAS")
       if (!err) {
-        billsQueries.addBillDetails(JSON.parse(body));
+        try {
+          billsQueries.addBillDetails(JSON.parse(body), function (err, body) {
+            if (err) {
+              throw err;
+            }
+          });
+          
+        } catch (e) {
+          getBillDetails(state,session,bill_id)
+        }
+        // When a console.log fixes your code ^ Very scary!
       }
     })
   }
@@ -37,28 +49,33 @@ var getStateBills = function (state, lastUpdateDate, page) {
     }
   }
 
-  request(apiReq, function (err, resp, body) {
-    if (body) {
-        billsQueries.addBills(JSON.parse(body))
-        getBillsDetails(JSON.parse(body))
-        getStateBills(state, lastUpdateDate, page + 1)
-    }
+  console.log("Requesting Bills...")
+  request(apiReq, function (err, resp, apiReqBody) {
+    // console.log("Should be nothing", body, "apiReq", apiReq)
+      // console.log("Err:", typeof body, "HALLAS")
+      try {
+        billsQueries.addBills(JSON.parse(apiReqBody), function (err, body){ if (err) {throw err;} getBillsDetails(JSON.parse(apiReqBody))})
+      } catch (e) {
+        getStateBills(state, lastUpdateDate, page)
+      }
+      getStateBills(state, lastUpdateDate, page + 1)
   })
 };
 
 var getAllStatesBills = function (lastUpdateDate) {
-  console.log("Seeding Bills...")
   statesList.forEach(function (state) {
     getStateBills(state.abbreviation, lastUpdateDate)
   })
 }
 
 var getLastLogDate = function () {
+  console.log("Requesting last update")
     return new Promise(function (resolve, reject) {
       sunlightLog.retrieveLastLogDate(function(lastUpdateDate) {
         resolve(lastUpdateDate)
       })
     }).then(function (lastUpdateDate) {
+      console.log("retrievedLastLogDate last update")
       getAllStatesBills(lastUpdateDate);
       sunlightLog.addDateToLog();
     })

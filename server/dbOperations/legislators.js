@@ -1,19 +1,25 @@
 var pg = require("./postgresInteractions");
 
 exports.addLegislators = function (legislators, cb) {
-	var query = "INSERT INTO Legislators (name, sunlightid, img, website, party, state, chamber) VALUES ($1, $2, $3, $4, $5, $6, $7) "
-	legislators.forEach(function (legislator) {
-		var values = [legislator.full_name,
-			legislator.leg_id, legislator.photo_url,
-			legislator.url, legislator["+party"],
-			legislator.state, legislator.chamber];
 
-		pg.query(query, values, cb)
+		// console.log("inserting legislator:", typeof legislators[0])
+	legislators.forEach(function (legislator) {
+		legislator = JSON.parse(legislator);
+		console.log(Object.keys(legislator))
+		var values = [{fieldName: "name", value: legislator.full_name},
+		{fieldName: "sunlightid", value: legislator.leg_id},
+		{fieldName: "img", value: legislator.photo_url},
+		{fieldName: "website", value: legislator.url},
+		{fieldName: "party", value: legislator["+party"]},
+		{fieldName: "state", value: legislator.state},
+		{fieldName: "chamber", value: legislator.chamber}]
+
+		pg.insertQuery("Legislators", values, cb)
 	})
 }
 
 exports.getLegislator = function (id, cb) {
-	var query = "SELECT party FROM Legislators WHERE id = '" + id + "'";
+	var query = "SELECT l.*, v.* FROM Legislators AS l JOIN Votes as v ON l.id = v.leg_id WHERE l.id = '" + id + "'";
 
 	pg.query(query, null, function (err, body) {
 		cb(err, body);
